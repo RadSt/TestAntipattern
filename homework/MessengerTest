@@ -1,0 +1,71 @@
+import sinon from 'sinon';
+import { Partner } from '../src/messenger/partner';
+import { Messenger } from '../src/messenger/messenger';
+
+
+suite('when client open contact list', function () {
+    // нужно заменить название на if messenger has it
+    suite('messenger has it', function () {
+        test('client get contact list', function () {
+            // Этот стаб нужно вынести в сетап, т.к. присутсвует во всех тестах
+            let userStub = {
+                isLogIn: function () {
+                    return true;
+                }
+            };
+            let partners = new Array<Partner>({});
+            let messenger = new Messenger(userStub);
+            let messengerMock = sinon.mock(messenger);
+            // также можно вынести в сетап
+            messengerMock.expects('getContactsList')
+                .once()
+                .returns(partners != null);
+
+            partners = messenger.getContactsList();
+
+            messengerMock.verify();
+        });
+    });
+});
+
+suite('when client send message', function () {
+    suite('to one person', function () {
+        // Не сответствие названия, должно быть messenger send message
+        test('message sended', function () {
+            let userStub = {
+                isLogIn: function () {
+                    return true;
+                }
+            };
+            let partner = new Partner();
+            let messenger = new Messenger(userStub);
+            let messengerMock = sinon.mock(messenger);
+            messengerMock.expects('sendMessage')
+                .once();
+
+            messenger.sendMessage(partner);
+
+            messengerMock.verify();
+        });
+    });
+
+    suite('to many person', function () {
+        //то же самое, должно быть messenger send message
+        test('message sended', function () {
+            let userStub = {
+                isLogIn: function () {
+                    return true;
+                }
+            };
+            let partner = new Array<Partner>({});
+            let messenger = new Messenger(userStub);
+            let messengerMock = sinon.mock(messenger);
+            messengerMock.expects('sendMessage')
+                .once();
+
+            messenger.sendMessage(partner);
+
+            messengerMock.verify();
+        });
+    });
+});
